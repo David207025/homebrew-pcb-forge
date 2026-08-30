@@ -5,11 +5,11 @@ class Pcbfapi < Formula
   if OS.mac?
     if Hardware::CPU.arm?
       url "https://github.com/David207025/PCB-Forge/releases/download/v0.3.0/pcbfapi-aarch64-apple-darwin.tar.xz"
-      sha256 "1419a001766b299dbb5e5ac01b69c59706294032948aeadeaf8410208cf1a85e"
+      sha256 "feab77132cb0528e463693ef3099a3eb2792ce107e2907d56d7a10319b7ee1bf"
     end
     if Hardware::CPU.intel?
       url "https://github.com/David207025/PCB-Forge/releases/download/v0.3.0/pcbfapi-x86_64-apple-darwin.tar.xz"
-      sha256 "153ce216747fee0464ff49e118eb8c4dd2946e4c81aecc2179e9e8d55d3b8d0f"
+      sha256 "775d727fcade3dd17d32858d5e61e6d8d3da038ad156a980db39fde09ee835fa"
     end
   end
 
