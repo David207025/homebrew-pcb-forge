@@ -1,15 +1,15 @@
 class Pcbfapi < Formula
-  desc "PCBF API is the background task used by the PCB-Forge VS-Code extension. This API manages the PDF creation and BOM storage/generation"
+  desc "Background API service for PCB Forge KiCad integration"
   homepage "https://github.com/David207025/PCB-Forge.git"
   version "0.3.0"
   if OS.mac?
     if Hardware::CPU.arm?
       url "https://github.com/David207025/PCB-Forge/releases/download/v0.3.0/pcbfapi-aarch64-apple-darwin.tar.xz"
-      sha256 "b6d253cdaae1c0a955d09c00644fe7e094f1539a29ff071bc728090c4a13b469"
+      sha256 "fa48d3831d3ceb4a38c4005a4b77b75ecb57ad8ee119ed08f310f10a96fc139d"
     end
     if Hardware::CPU.intel?
       url "https://github.com/David207025/PCB-Forge/releases/download/v0.3.0/pcbfapi-x86_64-apple-darwin.tar.xz"
-      sha256 "ee4aaaac522f02c4f1529af0df0503239ffb5ae8bd15ba66ff61b81affe5fa49"
+      sha256 "c44dbb77815c54b450481cca4a91a4a6788e70442ae584238139166fb17a41de"
     end
   end
 
@@ -63,15 +63,6 @@ class Pcbfapi < Formula
     working_dir var
   end
 
-  def post_install
-    (var/"log").mkpath
-    begin
-      system "#{opt_bin}/pcbfapi", "service", "install"
-    rescue
-      nil
-    end
-  end
-
   def caveats
     <<~EOS
       pcbfapi runs as a persistent background daemon service.
@@ -85,5 +76,9 @@ class Pcbfapi < Formula
       To verify KiCad file and CLI access:
         pcbfapi check-access
     EOS
+  end
+
+  test do
+    assert_predicate bin/"pcbfapi", :executable?
   end
 end
