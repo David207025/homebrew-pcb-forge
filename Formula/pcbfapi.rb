@@ -5,11 +5,11 @@ class Pcbfapi < Formula
   if OS.mac?
     if Hardware::CPU.arm?
       url "https://github.com/David207025/PCB-Forge/releases/download/v0.3.0/pcbfapi-aarch64-apple-darwin.tar.xz"
-      sha256 "a667fa84a57333eef058d327f575f4ac6c5765d18d95a0cd16d62a2abba5c312"
+      sha256 "b6d253cdaae1c0a955d09c00644fe7e094f1539a29ff071bc728090c4a13b469"
     end
     if Hardware::CPU.intel?
       url "https://github.com/David207025/PCB-Forge/releases/download/v0.3.0/pcbfapi-x86_64-apple-darwin.tar.xz"
-      sha256 "72eff2a6ca8ffb8aa1cf0ab058bc5a6c18552289f3a8ec880758ce93fc86b861"
+      sha256 "ee4aaaac522f02c4f1529af0df0503239ffb5ae8bd15ba66ff61b81affe5fa49"
     end
   end
 
@@ -51,5 +51,39 @@ class Pcbfapi < Formula
     # Install any leftover files in pkgshare; these are probably config or
     # sample files.
     pkgshare.install(*leftover_contents) unless leftover_contents.empty?
+  end
+
+  service do
+    run [opt_bin/"pcbfapi", "run"]
+    keep_alive true
+    run_type :immediate
+    environment_variables PATH: std_service_path_env
+    error_log_path var/"log/pcbfapi.err.log"
+    log_path var/"log/pcbfapi.log"
+    working_dir var
+  end
+
+  def post_install
+    (var/"log").mkpath
+    begin
+      system "#{opt_bin}/pcbfapi", "service", "install"
+    rescue
+      nil
+    end
+  end
+
+  def caveats
+    <<~EOS
+      pcbfapi runs as a persistent background daemon service.
+      It starts automatically at boot/login.
+
+      To manage with brew services:
+        brew services start pcbfapi
+        brew services stop pcbfapi
+        brew services restart pcbfapi
+
+      To verify KiCad file and CLI access:
+        pcbfapi check-access
+    EOS
   end
 end
